@@ -1,22 +1,4 @@
 {
-  "version": 2,
-  "name": "agri-index",
-  "builds": [
-    {
-      "src": "website/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "website/dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/website/index.html"
-    }
-  ],
-  "installCommand": "cd website && npm install",
   "buildCommand": "cd website && npm run build",
   "outputDirectory": "website/dist"
 }
