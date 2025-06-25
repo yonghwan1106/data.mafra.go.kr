@@ -1,0 +1,92 @@
+[
+  {
+    "id": "policy-001",
+    "title": "스마트팜 혁신밸리 조성사업",
+    "category": "스마트농업",
+    "supportAmount": 50000000,
+    "applicationPeriod": {
+      "start": "2025-03-01",
+      "end": "2025-04-30"
+    },
+    "targetCrops": ["토마토", "딸기", "상추"],
+    "selectionRate": 25,
+    "description": "ICT 기술을 활용한 스마트팜 시설 구축 지원",
+    "benefits": [
+      "시설비 70% 지원",
+      "기술 컨설팅 제공",
+      "3년간 사후관리"
+    ]
+  },
+  {
+    "id": "policy-002", 
+    "title": "청년농업인 정착지원사업",
+    "category": "청년농업",
+    "supportAmount": 30000000,
+    "applicationPeriod": {
+      "start": "2025-02-01",
+      "end": "2025-03-31"
+    },
+    "targetCrops": ["전작물"],
+    "selectionRate": 40,
+    "description": "만 18세~40세 청년농업인 영농정착 지원",
+    "benefits": [
+      "정착지원금 월 100만원(최대 3년)",
+      "농업교육 무료 제공",
+      "멘토링 프로그램"
+    ]
+  },
+  {
+    "id": "policy-003",
+    "title": "친환경농업 직불제",
+    "category": "친환경농업",
+    "supportAmount": 5000000,
+    "applicationPeriod": {
+      "start": "2025-01-01",
+      "end": "2025-12-31"
+    },
+    "targetCrops": ["유기농 인증 작물"],
+    "selectionRate": 80,
+    "description": "친환경농업 실천농가 소득보전 직접지불금",
+    "benefits": [
+      "유기농업 최대 50만원/10a",
+      "무농약농업 최대 30만원/10a",
+      "지속적 지원 가능"
+    ]
+  },
+  {
+    "id": "policy-004",
+    "title": "농업재해보험",
+    "category": "재해보험",
+    "supportAmount": 2000000,
+    "applicationPeriod": {
+      "start": "2025-01-01",
+      "end": "2025-11-30"
+    },
+    "targetCrops": ["전작물"],
+    "selectionRate": 95,
+    "description": "자연재해로 인한 농작물 피해 보상",
+    "benefits": [
+      "보험료 50% 국고지원",
+      "피해 시 80% 보상",
+      "신속한 손해사정"
+    ]
+  },
+  {
+    "id": "policy-005",
+    "title": "농촌융복합산업 활성화 지원사업",
+    "category": "6차산업",
+    "supportAmount": 100000000,
+    "applicationPeriod": {
+      "start": "2025-04-01",
+      "end": "2025-05-31"
+    },
+    "targetCrops": ["가공적합 작물"],
+    "selectionRate": 15,
+    "description": "농산물 가공·체험·관광 등 6차산업 육성",
+    "benefits": [
+      "시설비 50% 지원",
+      "마케팅 지원",
+      "사업화 컨설팅"
+    ]
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "farm-001",
+    "name": "그린파밍 농장",
+    "owner": "김농부",
+    "location": {
+      "lat": 37.5665,
+      "lng": 126.9780,
+      "address": "서울특별시 중구 태평로1가",
+      "region": "서울"
+    },
+    "cropType": "토마토",
+    "farmSize": 2.5,
+    "aciScore": 85,
+    "aciGrade": "A",
+    "lastUpdated": "2025-06-24T09:00:00Z"
+  },
+  {
+    "id": "farm-002", 
+    "name": "황금벌판 농장",
+    "owner": "이농부",
+    "location": {
+      "lat": 37.4563,
+      "lng": 126.7052,
+      "address": "경기도 부천시 원미구",
+      "region": "경기"
+    },
+    "cropType": "딸기",
+    "farmSize": 1.8,
+    "aciScore": 72,
+    "aciGrade": "B",
+    "lastUpdated": "2025-06-24T09:00:00Z"
+  },
+  {
+    "id": "farm-003",
+    "name": "청정농원",
+    "owner": "박농부", 
+    "location": {
+      "lat": 35.8714,
+      "lng": 128.6014,
+      "address": "대구광역시 수성구",
+      "region": "대구"
+    },
+    "cropType": "상추",
+    "farmSize": 3.2,
+    "aciScore": 68,
+    "aciGrade": "B",
+    "lastUpdated": "2025-06-24T09:00:00Z"
+  },
+  {
+    "id": "farm-004",
+    "name": "미래농업 농장",
+    "owner": "최농부",
+    "location": {
+      "lat": 35.1595,
+      "lng": 129.0756,
+      "address": "부산광역시 해운대구",
+      "region": "부산"
+    },
+    "cropType": "오이",
+    "farmSize": 2.1,
+    "aciScore": 58,
+    "aciGrade": "C", 
+    "lastUpdated": "2025-06-24T09:00:00Z"
+  },
+  {
+    "id": "farm-005",
+    "name": "자연친화 농원",
+    "owner": "정농부",
+    "location": {
+      "lat": 36.3504,
+      "lng": 127.3845,
+      "address": "대전광역시 서구",
+      "region": "대전"
+    },
+    "cropType": "배추",
+    "farmSize": 4.5,
+    "aciScore": 76,
+    "aciGrade": "B",
+    "lastUpdated": "2025-06-24T09:00:00Z"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "current": {
+    "temperature": 24.5,
+    "humidity": 65,
+    "rainfall": 0,
+    "windSpeed": 2.3,
+    "condition": "partly_cloudy",
+    "lastUpdated": "2025-06-24T09:00:00Z"
+  },
+  "forecast": [
+    {"date": "2025-06-25", "tempMin": 18, "tempMax": 26, "rainfall": 5, "condition": "light_rain", "risk": "low"},
+    {"date": "2025-06-26", "tempMin": 19, "tempMax": 28, "rainfall": 0, "condition": "sunny", "risk": "low"},
+    {"date": "2025-06-27", "tempMin": 21, "tempMax": 30, "rainfall": 0, "condition": "sunny", "risk": "medium"},
+    {"date": "2025-06-28", "tempMin": 23, "tempMax": 32, "rainfall": 0, "condition": "hot", "risk": "high"},
+    {"date": "2025-06-29", "tempMin": 24, "tempMax": 33, "rainfall": 0, "condition": "very_hot", "risk": "high"},
+    {"date": "2025-06-30", "tempMin": 22, "tempMax": 29, "rainfall": 15, "condition": "rain", "risk": "medium"},
+    {"date": "2025-07-01", "tempMin": 20, "tempMax": 26, "rainfall": 10, "condition": "cloudy", "risk": "low"}
+  ],
+  "alerts": [
+    {
+      "type": "heat_wave",
+      "severity": "warning",
+      "message": "6월 28-29일 폭염 예상, 작물 관리에 주의 필요",
+      "startDate": "2025-06-28",
+      "endDate": "2025-06-29"
+    }
+  ]
+}

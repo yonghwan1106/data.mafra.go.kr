@@ -2,6 +2,13 @@ import { useEffect } from 'react';
 import { useAppStore } from '../stores/useAppStore';
 import { Farm, ACIData, WeatherData, MarketPrice, Policy } from '../types';
 
+// Import JSON data directly
+import farmsData from '../data/farms.json';
+import aciHistoryData from '../data/aci-history.json';
+import weatherData from '../data/weather.json';
+import marketPricesData from '../data/market-prices.json';
+import policiesData from '../data/policies.json';
+
 export const useDataLoader = () => {
   const {
     setFarms,
@@ -15,37 +22,22 @@ export const useDataLoader = () => {
   } = useAppStore();
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadData = () => {
       setLoading(true);
       setError(null);
 
       try {
-        // Load all data in parallel
-        const [
-          farmsResponse,
-          aciHistoryResponse,
-          weatherResponse,
-          marketPricesResponse,
-          policiesResponse
-        ] = await Promise.all([
-          fetch('/data/farms.json'),
-          fetch('/data/aci-history.json'),
-          fetch('/data/weather.json'),
-          fetch('/data/market-prices.json'),
-          fetch('/data/policies.json')
-        ]);
-
-        // Parse JSON data
-        const farms: Farm[] = await farmsResponse.json();
-        const aciHistory: Record<string, ACIData[]> = await aciHistoryResponse.json();
-        const weatherData: WeatherData = await weatherResponse.json();
-        const marketPrices: Record<string, MarketPrice> = await marketPricesResponse.json();
-        const policies: Policy[] = await policiesResponse.json();
+        // Use directly imported data
+        const farms: Farm[] = farmsData as Farm[];
+        const aciHistory: Record<string, ACIData[]> = aciHistoryData as Record<string, ACIData[]>;
+        const weather: WeatherData = weatherData as WeatherData;
+        const marketPrices: Record<string, MarketPrice> = marketPricesData as Record<string, MarketPrice>;
+        const policies: Policy[] = policiesData as Policy[];
 
         // Update store
         setFarms(farms);
         setACIHistory(aciHistory);
-        setWeatherData(weatherData);
+        setWeatherData(weather);
         setMarketPrices(marketPrices);
         setPolicies(policies);
 
