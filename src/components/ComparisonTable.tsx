@@ -83,12 +83,13 @@ const ComparisonTable = ({ scores }: ComparisonTableProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900">세부 지수 분석 및 개선 방안</h3>
         <p className="text-sm text-gray-600 mt-1">각 지수별 현황과 맞춤형 개선 방안을 제공합니다</p>
       </div>
       
-      <div className="overflow-x-auto">
+      {/* Desktop Table View */}
+      <div className="hidden lg:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -163,13 +164,74 @@ const ComparisonTable = ({ scores }: ComparisonTableProps) => {
           </tbody>
         </table>
       </div>
+
+      {/* Mobile Card View */}
+      <div className="lg:hidden space-y-4 p-4">
+        {scores.map((score, index) => (
+          <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl">{score.icon}</span>
+                <div>
+                  <div className="text-sm font-medium text-gray-900">{score.name}</div>
+                  <div className="text-xs text-gray-500">
+                    {score.name === '기상위험' ? 'Weather Risk' :
+                     score.name === '토양건강' ? 'Soil Health' :
+                     score.name === '병해충' ? 'Pest Risk' :
+                     score.name === '시장가치' ? 'Market Value' :
+                     score.name === '정책지원' ? 'Policy Support' :
+                     'Geographic Suitability'}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-bold" style={{ color: score.color }}>
+                  {score.score}
+                </div>
+                <div 
+                  className="px-2 py-1 text-xs font-medium rounded-full text-white inline-block"
+                  style={{ backgroundColor: score.color }}
+                >
+                  {score.grade}등급
+                </div>
+              </div>
+            </div>
+
+            {/* Current Status */}
+            <div className="mb-3">
+              <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                현재 상태
+              </div>
+              <div className="text-sm text-gray-900">
+                {getScoreDescription(score.name, score.score)}
+              </div>
+            </div>
+
+            {/* Recommendations */}
+            <div>
+              <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+                개선 방안
+              </div>
+              <div className="space-y-1">
+                {getRecommendation(score.name, score.score).map((rec, recIndex) => (
+                  <div key={recIndex} className="flex items-start space-x-2">
+                    <span className="text-primary-500 text-xs mt-1">•</span>
+                    <span className="text-sm text-gray-700">{rec}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
       
-      <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-        <div className="flex items-center justify-between">
+      <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
           <div className="text-sm text-gray-600">
             💡 <strong>팁:</strong> 점수가 낮은 지수부터 우선적으로 개선하시면 전체 ACI 향상에 효과적입니다.
           </div>
-          <button className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+          <button className="text-sm text-primary-600 hover:text-primary-700 font-medium text-left sm:text-right">
             상세 가이드 보기 →
           </button>
         </div>
