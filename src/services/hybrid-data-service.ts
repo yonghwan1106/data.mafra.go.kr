@@ -9,11 +9,46 @@ import { Farm } from '../types';
 // 기존 모크데이터 로더 (기존 기능 유지)
 const loadMockFarms = async (): Promise<Farm[]> => {
   try {
-    const response = await fetch('/data/farms.json');
-    return await response.json();
+    // Vercel 환경에서는 import 방식 사용
+    const farmsData = await import('../data/farms.json');
+    return farmsData.default as Farm[];
   } catch (error) {
     console.error('모크데이터 로딩 실패:', error);
-    return [];
+    // 폴백으로 하드코딩된 샘플 데이터 제공
+    return [
+      {
+        id: "farm-001",
+        name: "그린팜 농장",
+        owner: "김농부",
+        location: {
+          lat: 36.5665,
+          lng: 126.9780,
+          address: "충청남도 공주시 우성면 신풍리",
+          region: "충청남도 공주시"
+        },
+        cropType: "벼",
+        farmSize: 2000,
+        aciScore: 78,
+        aciGrade: "B" as const,
+        lastUpdated: "2024-07-21"
+      },
+      {
+        id: "farm-002", 
+        name: "스마트팜 센터",
+        owner: "이농부",
+        location: {
+          lat: 36.4800,
+          lng: 127.2890,
+          address: "세종특별자치시 연기면",
+          region: "세종특별자치시"
+        },
+        cropType: "토마토",
+        farmSize: 1500,
+        aciScore: 85,
+        aciGrade: "A" as const,
+        lastUpdated: "2024-07-21"
+      }
+    ];
   }
 };
 

@@ -54,13 +54,11 @@ export class FarmMapApiClient {
   private baseUrl: string;
   private apiKey: string;
   private domain: string;
-  private timeout: number;
 
   constructor() {
     this.baseUrl = DATA_SOURCE_CONFIG.farmMapAPI.baseUrl;
     this.apiKey = DATA_SOURCE_CONFIG.farmMapAPI.apiKey;
     this.domain = DATA_SOURCE_CONFIG.farmMapAPI.domain;
-    this.timeout = DATA_SOURCE_CONFIG.farmMapAPI.timeout;
   }
 
   /**
@@ -110,43 +108,49 @@ export class FarmMapApiClient {
   }
 
   /**
-   * JSONP 방식으로 데이터 가져오기
+   * JSONP 방식으로 데이터 가져오기 (안전한 버전)
    */
   private fetchWithJsonp<T>(url: string): Promise<T> {
     return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      const callbackName = `callback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      // 타임아웃 설정
-      const timeoutId = setTimeout(() => {
-        cleanup();
-        reject(new Error('API 호출 타임아웃'));
-      }, this.timeout);
+      // 개발 환경에서만 실제 API 호출 시도
+      if (window.location.hostname === 'localhost') {
+        const script = document.createElement('script');
+        const callbackName = `farmmap_callback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        // 타임아웃 설정 (더 짧게)
+        const timeoutId = setTimeout(() => {
+          cleanup();
+          reject(new Error('API 호출 타임아웃 - 모크데이터로 폴백'));
+        }, 5000);
 
-      const cleanup = () => {
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-        delete (window as any)[callbackName];
-        clearTimeout(timeoutId);
-      };
+        const cleanup = () => {
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+          delete (window as any)[callbackName];
+          clearTimeout(timeoutId);
+        };
 
-      // 콜백 함수 설정
-      (window as any)[callbackName] = (data: T) => {
-        cleanup();
-        resolve(data);
-      };
+        // 콜백 함수 설정
+        (window as any)[callbackName] = (data: T) => {
+          cleanup();
+          resolve(data);
+        };
 
-      script.onerror = () => {
-        cleanup();
-        reject(new Error('스크립트 로딩 오류'));
-      };
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('API 연결 실패 - CORS 또는 네트워크 오류'));
+        };
 
-      // URL에 콜백 파라미터 추가
-      const separator = url.includes('?') ? '&' : '?';
-      script.src = `${url}${separator}callback=${callbackName}`;
-      
-      document.head.appendChild(script);
+        // URL에 콜백 파라미터 추가
+        const separator = url.includes('?') ? '&' : '?';
+        script.src = `${url}${separator}callback=${callbackName}`;
+        
+        document.head.appendChild(script);
+      } else {
+        // 프로덕션 환경에서는 즉시 실패로 처리하여 폴백 활성화
+        reject(new Error('프로덕션 환경 - API 연결 제한'));
+      }
     });
   }
 
