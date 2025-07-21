@@ -102,6 +102,10 @@ export class FarmMapApiClient {
 
       return response;
     } catch (error) {
+      // 프로덕션 환경 제한은 정상적인 동작이므로 콘솔 로그 없이 조용히 실패
+      if ((error as Error).message.includes('프로덕션 환경')) {
+        throw error; // 오류는 throw하되 콘솔에는 출력하지 않음
+      }
       console.error('❌ FarmMap API 오류:', error);
       throw error;
     }
@@ -213,6 +217,10 @@ export class FarmMapApiClient {
       console.log('✅ FarmMap API 연결 성공');
       return true;
     } catch (error) {
+      // 프로덕션 환경 제한은 정상적인 동작이므로 콘솔 로그 없이 조용히 실패
+      if ((error as Error).message.includes('프로덕션 환경')) {
+        return false; // 오류는 false 반환하되 콘솔에는 출력하지 않음
+      }
       console.error('❌ FarmMap API 연결 실패:', error);
       return false;
     }
