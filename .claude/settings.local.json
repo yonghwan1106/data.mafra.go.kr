@@ -28,7 +28,10 @@
       "mcp__playwright-stealth__playwright_evaluate",
       "mcp__playwright-stealth__playwright_close",
       "mcp__sequential-thinking__sequentialthinking",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:data-mafra-go-kr.vercel.app)"
     ],
     "deny": []
   }

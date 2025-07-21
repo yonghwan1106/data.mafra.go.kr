@@ -155,7 +155,7 @@ export class HybridDataService {
               // 최대 5개 농장만 각 지역/분류별로 가져오기
               const limitedData = farmData.slice(0, 5);
               
-              limitedData.forEach((data, index) => {
+              limitedData.forEach((data) => {
                 const farm = convertFarmMapDataToFarm(data, allFarms.length);
                 allFarms.push(farm);
               });
@@ -197,7 +197,7 @@ export class HybridDataService {
       for (const landCd of landCodes) {
         const farmData = await farmMapApiClient.getFarmDataByBjdAndLandCode(bjdCd, landCd);
         
-        farmData.forEach((data, index) => {
+        farmData.forEach((data) => {
           const farm = convertFarmMapDataToFarm(data, farms.length);
           farms.push(farm);
         });

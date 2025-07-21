@@ -4,8 +4,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  DATA_SOURCE_CONFIG, 
-  toggleDataSource, 
   enableFarmMapAPI, 
   disableFarmMapAPI,
   getDataSourceStatus 
