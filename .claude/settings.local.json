@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv:*)",
+      "Bash(npm run dev:*)",
+      "Bash(rm:*)",
+      "Bash(npm install)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(git config:*)",
+      "Bash(gh auth:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(tar:*)",
+      "Bash(npx vercel:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(npm run preview:*)",
+      "mcp__playwright-stealth__playwright_navigate",
+      "mcp__playwright-stealth__playwright_screenshot",
+      "mcp__playwright-stealth__playwright_console_logs",
+      "mcp__playwright-stealth__playwright_evaluate",
+      "mcp__playwright-stealth__playwright_close",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(git checkout:*)"
+    ],
+    "deny": []
+  }
+}
