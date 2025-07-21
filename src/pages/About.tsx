@@ -1,4 +1,3 @@
-import { ChartBarIcon, MapIcon, BeakerIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import ContestInfo from '../components/ContestInfo';
 import PublicDataInfo from '../components/PublicDataInfo';
 
@@ -84,17 +83,23 @@ const About = () => {
         <h2 className="text-2xl font-bold text-gray-900 mb-6">주요 기능</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div className="text-center">
-            <ChartBarIcon className="w-12 h-12 text-primary-600 mx-auto mb-4" />
+            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">📊</span>
+            </div>
             <h3 className="text-lg font-semibold mb-2">종합 대시보드</h3>
             <p className="text-gray-600">농업복합지수와 세부 지수를 한눈에 확인할 수 있는 직관적인 대시보드</p>
           </div>
           <div className="text-center">
-            <MapIcon className="w-12 h-12 text-primary-600 mx-auto mb-4" />
+            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">🗺️</span>
+            </div>
             <h3 className="text-lg font-semibold mb-2">지역별 현황 지도</h3>
             <p className="text-gray-600">전국 농업 현황을 지도로 시각화하여 지역간 비교 분석 제공</p>
           </div>
           <div className="text-center">
-            <BeakerIcon className="w-12 h-12 text-primary-600 mx-auto mb-4" />
+            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">📈</span>
+            </div>
             <h3 className="text-lg font-semibold mb-2">상세 분석</h3>
             <p className="text-gray-600">시계열 분석과 예측 모델을 통한 농업 트렌드 분석</p>
           </div>
@@ -134,7 +139,9 @@ const About = () => {
       <section className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">비전</h2>
         <div className="text-center">
-          <TrophyIcon className="w-16 h-16 text-primary-600 mx-auto mb-4" />
+          <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">🏆</span>
+          </div>
           <p className="text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto">
             아그리인덱스는 공공데이터의 힘으로 농업의 디지털 전환을 이끌어, 
             모든 농업인이 데이터에 기반한 스마트한 의사결정을 내릴 수 있는 
