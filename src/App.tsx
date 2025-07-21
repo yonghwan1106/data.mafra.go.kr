@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import MapView from './pages/MapView';
 import Analytics from './pages/Analytics';
+import About from './pages/About';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/map" element={<MapView />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Layout>
   );

@@ -62,7 +62,8 @@ const Layout = ({ children }: LayoutProps) => {
   const navItems = [
     { path: '/', label: '대시보드', icon: '📊' },
     { path: '/map', label: '지도', icon: '🗺️' },
-    { path: '/analytics', label: '분석', icon: '📈' }
+    { path: '/analytics', label: '분석', icon: '📈' },
+    { path: '/about', label: '소개', icon: 'ℹ️' }
   ];
 
   return (
