@@ -71,8 +71,12 @@ const DataSourceToggle: React.FC<DataSourceToggleProps> = ({
     return 'API 상태 확인 필요';
   };
 
-  // 프로덕션 환경에서는 숨김
-  if (process.env.NODE_ENV === 'production') {
+  // 프로덕션 환경에서는 숨김 (프로덕션에서는 항상 숨김)
+  const isDevelopment = window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1' ||
+                       window.location.hostname.includes('vercel.app');
+  
+  if (!isDevelopment) {
     return null;
   }
 

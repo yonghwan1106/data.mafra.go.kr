@@ -46,8 +46,8 @@ export const DATA_SOURCE_CONFIG: DataSourceConfig = {
     fallbackDelay: 1000
   },
   
-  debug: process.env.NODE_ENV === 'development',
-  logApiCalls: process.env.NODE_ENV === 'development'
+  debug: true, // 개발 중이므로 디버그 활성화
+  logApiCalls: true
 };
 
 // 런타임에 설정 변경 가능한 함수들

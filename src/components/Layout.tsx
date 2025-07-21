@@ -102,7 +102,7 @@ const Layout = ({ children }: LayoutProps) => {
             {/* Data Source Toggle, Farm Selector & Notification Center */}
             <div className="flex items-center space-x-4">
               <NotificationCenter />
-              {process.env.NODE_ENV === 'development' && (
+              {(window.location.hostname === 'localhost' || window.location.hostname.includes('vercel.app')) && (
                 <div className="hidden lg:block">
                   <DataSourceToggle className="text-xs" />
                 </div>
