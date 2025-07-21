@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAppStore } from '../stores/useAppStore';
 import { NotificationSystem } from '../utils/notification-system';
 import NotificationCenter from './NotificationCenter';
+import DataSourceToggle from './DataSourceToggle';
 
 interface LayoutProps {
   children: ReactNode;
@@ -98,9 +99,14 @@ const Layout = ({ children }: LayoutProps) => {
               ))}
             </nav>
 
-            {/* Farm Selector & Notification Center */}
+            {/* Data Source Toggle, Farm Selector & Notification Center */}
             <div className="flex items-center space-x-4">
               <NotificationCenter />
+              {process.env.NODE_ENV === 'development' && (
+                <div className="hidden lg:block">
+                  <DataSourceToggle className="text-xs" />
+                </div>
+              )}
               {farms.length > 0 && (
                 <select
                   value={selectedFarm?.id || ''}
