@@ -1,0 +1,3 @@
+
+팜맵 ( https://agis.epis.or.kr ) API KEY	: 0eVL9ZCI4mwTeCbhdCwN
+사용 도메인 https://data-mafra-go-kr.vercel.app/	 

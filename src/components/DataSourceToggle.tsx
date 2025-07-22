@@ -6,6 +6,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   enableFarmMapAPI, 
   disableFarmMapAPI,
+  enableWeatherAPI,
+  disableWeatherAPI,
   getDataSourceStatus 
 } from '../config/data-sources';
 import { hybridDataService } from '../services/hybrid-data-service';
@@ -21,7 +23,11 @@ const DataSourceToggle: React.FC<DataSourceToggleProps> = ({
 }) => {
   const [status, setStatus] = useState(getDataSourceStatus());
   const [isConnecting, setIsConnecting] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'unknown' | 'connected' | 'failed'>('unknown');
+  const [connectionStatus, setConnectionStatus] = useState<{
+    farmMap: 'unknown' | 'connected' | 'failed';
+    weather: 'unknown' | 'connected' | 'failed';
+    dataPortal: 'unknown' | 'connected' | 'failed';
+  }>({ farmMap: 'unknown', weather: 'unknown', dataPortal: 'unknown' });
 
   useEffect(() => {
     // 초기 연결 상태 확인
@@ -29,14 +35,20 @@ const DataSourceToggle: React.FC<DataSourceToggleProps> = ({
   }, []);
 
   const checkConnection = async () => {
-    if (!status.apiEnabled) return;
-    
     setIsConnecting(true);
     try {
-      const isConnected = await hybridDataService.checkAPIConnection();
-      setConnectionStatus(isConnected ? 'connected' : 'failed');
+      const results = await hybridDataService.checkAPIConnection();
+      setConnectionStatus({
+        farmMap: results.farmMap ? 'connected' : (status.farmMapAPI ? 'failed' : 'unknown'),
+        weather: results.weather ? 'connected' : (status.weatherAPI ? 'failed' : 'unknown'),
+        dataPortal: results.dataPortal ? 'connected' : (status.dataPortalAPI ? 'failed' : 'unknown')
+      });
     } catch (error) {
-      setConnectionStatus('failed');
+      setConnectionStatus({
+        farmMap: status.farmMapAPI ? 'failed' : 'unknown',
+        weather: status.weatherAPI ? 'failed' : 'unknown',
+        dataPortal: status.dataPortalAPI ? 'failed' : 'unknown'
+      });
     }
     setIsConnecting(false);
   };
@@ -44,11 +56,13 @@ const DataSourceToggle: React.FC<DataSourceToggleProps> = ({
   const handleToggleSource = async (source: 'mock' | 'api') => {
     if (source === 'api') {
       enableFarmMapAPI();
+      enableWeatherAPI();
       // API 연결 테스트
       await checkConnection();
     } else {
       disableFarmMapAPI();
-      setConnectionStatus('unknown');
+      disableWeatherAPI();
+      setConnectionStatus({ farmMap: 'unknown', weather: 'unknown', dataPortal: 'unknown' });
     }
     
     setStatus(getDataSourceStatus());
@@ -58,16 +72,34 @@ const DataSourceToggle: React.FC<DataSourceToggleProps> = ({
   const getStatusIcon = () => {
     if (status.primary === 'mock') return '📦';
     if (isConnecting) return '🔄';
-    if (connectionStatus === 'connected') return '🟢';
-    if (connectionStatus === 'failed') return '🔴';
-    return '🟡';
+    
+    const farmMapOk = connectionStatus.farmMap === 'connected';
+    const weatherOk = connectionStatus.weather === 'connected';
+    const dataPortalOk = connectionStatus.dataPortal === 'connected';
+    
+    const connectedCount = [farmMapOk, weatherOk, dataPortalOk].filter(Boolean).length;
+    
+    if (connectedCount === 3) return '🟢';
+    if (connectedCount >= 1) return '🟡';
+    return '🔴';
   };
 
   const getStatusText = () => {
     if (status.primary === 'mock') return '모크데이터';
     if (isConnecting) return '연결 확인 중...';
-    if (connectionStatus === 'connected') return 'API 연결됨';
-    if (connectionStatus === 'failed') return 'API 연결 실패';
+    
+    const farmMapOk = connectionStatus.farmMap === 'connected';
+    const weatherOk = connectionStatus.weather === 'connected';
+    const dataPortalOk = connectionStatus.dataPortal === 'connected';
+    
+    const connected = [];
+    if (farmMapOk) connected.push('팜맵');
+    if (weatherOk) connected.push('기상청');
+    if (dataPortalOk) connected.push('농진청');
+    
+    if (connected.length === 3) return `API 연결됨 (${connected.join(' + ')})`;
+    if (connected.length > 0) return `API 부분 연결 (${connected.join(' + ')})`;
+    if (connectionStatus.farmMap === 'failed' || connectionStatus.weather === 'failed' || connectionStatus.dataPortal === 'failed') return 'API 연결 실패';
     return 'API 상태 확인 필요';
   };
 
@@ -120,15 +152,58 @@ const DataSourceToggle: React.FC<DataSourceToggleProps> = ({
         </div>
       </div>
       
-      {status.primary === 'api' && connectionStatus === 'failed' && (
-        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
-          ⚠️ API 연결에 실패했습니다. 자동으로 모크데이터로 폴백됩니다.
-        </div>
-      )}
-      
-      {status.primary === 'api' && connectionStatus === 'connected' && (
-        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
-          ✅ FarmMap API가 정상적으로 연결되었습니다.
+      {status.primary === 'api' && (
+        <div className="mt-2 space-y-1">
+          {/* FarmMap API 상태 */}
+          <div className={`p-2 rounded text-xs flex items-center justify-between ${
+            connectionStatus.farmMap === 'connected' 
+              ? 'bg-green-50 border border-green-200 text-green-700'
+              : connectionStatus.farmMap === 'failed'
+              ? 'bg-red-50 border border-red-200 text-red-700'
+              : 'bg-gray-50 border border-gray-200 text-gray-700'
+          }`}>
+            <span>🗺️ FarmMap API</span>
+            <span>{
+              connectionStatus.farmMap === 'connected' ? '✅ 연결됨' :
+              connectionStatus.farmMap === 'failed' ? '❌ 실패' : '⏳ 확인 중'
+            }</span>
+          </div>
+          
+          {/* 기상청 API 상태 */}
+          <div className={`p-2 rounded text-xs flex items-center justify-between ${
+            connectionStatus.weather === 'connected' 
+              ? 'bg-green-50 border border-green-200 text-green-700'
+              : connectionStatus.weather === 'failed'
+              ? 'bg-red-50 border border-red-200 text-red-700'
+              : 'bg-gray-50 border border-gray-200 text-gray-700'
+          }`}>
+            <span>🌤️ 기상청 API</span>
+            <span>{
+              connectionStatus.weather === 'connected' ? '✅ 연결됨' :
+              connectionStatus.weather === 'failed' ? '❌ 실패' : '⏳ 확인 중'
+            }</span>
+          </div>
+
+          {/* 농촌진흥청 API 상태 */}
+          <div className={`p-2 rounded text-xs flex items-center justify-between ${
+            connectionStatus.dataPortal === 'connected' 
+              ? 'bg-green-50 border border-green-200 text-green-700'
+              : connectionStatus.dataPortal === 'failed'
+              ? 'bg-red-50 border border-red-200 text-red-700'
+              : 'bg-gray-50 border border-gray-200 text-gray-700'
+          }`}>
+            <span>🌱 농촌진흥청 API</span>
+            <span>{
+              connectionStatus.dataPortal === 'connected' ? '✅ 연결됨' :
+              connectionStatus.dataPortal === 'failed' ? '❌ 실패' : '⏳ 확인 중'
+            }</span>
+          </div>
+          
+          {(connectionStatus.farmMap === 'failed' || connectionStatus.weather === 'failed' || connectionStatus.dataPortal === 'failed') && (
+            <div className="p-2 bg-orange-50 border border-orange-200 rounded text-xs text-orange-700">
+              ⚠️ 일부 API 연결 실패. 실패한 API는 자동으로 모크데이터로 폴백됩니다.
+            </div>
+          )}
         </div>
       )}
     </div>

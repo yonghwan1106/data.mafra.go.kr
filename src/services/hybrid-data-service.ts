@@ -4,7 +4,9 @@
 
 import { DATA_SOURCE_CONFIG } from '../config/data-sources';
 import { farmMapApiClient, FarmMapData } from './farmmap-api-client';
-import { Farm } from '../types';
+import { kmaApiClient } from './kma-api-client';
+import { rdaApiClient } from './rda-api-client';
+import { Farm, WeatherData, AgriculturalWeatherData, RDAPestInfo, SoilInfo } from '../types';
 
 // 기존 모크데이터 로더 (기존 기능 유지)
 const loadMockFarms = async (): Promise<Farm[]> => {
@@ -246,19 +248,273 @@ export class HybridDataService {
   }
 
   /**
-   * API 연결 상태 확인
+   * 기상 데이터 조회 - 농장 위치 기반
    */
-  async checkAPIConnection(): Promise<boolean> {
-    if (!DATA_SOURCE_CONFIG.farmMapAPI.enabled) {
-      return false;
+  async getWeatherData(farmLat?: number, farmLng?: number): Promise<WeatherData> {
+    const config = DATA_SOURCE_CONFIG;
+    
+    if (config.debug) {
+      console.log('🌤️ 기상 데이터 조회 시작:', {
+        weatherAPI: config.weatherAPI.enabled,
+        farmLocation: farmLat && farmLng ? `${farmLat}, ${farmLng}` : '기본 위치'
+      });
     }
 
-    try {
-      return await farmMapApiClient.testConnection();
-    } catch (error) {
-      console.error('❌ API 연결 테스트 실패:', error);
-      return false;
+    // 1차 시도: 기상청 API 사용
+    if (config.weatherAPI.enabled && farmLat && farmLng) {
+      try {
+        const weatherData = await kmaApiClient.getShortTermForecast(farmLat, farmLng);
+        if (weatherData) {
+          if (config.debug) {
+            console.log('✅ 기상청 API에서 데이터 로딩 완료');
+          }
+          return weatherData;
+        }
+      } catch (error) {
+        console.error('❌ 기상청 API 조회 실패:', error);
+      }
     }
+
+    // 2차 시도: 모크 데이터 사용
+    if (config.debug) {
+      console.log('📦 기상 모크데이터 사용');
+    }
+    
+    return await this.getMockWeatherData();
+  }
+
+  /**
+   * 농업기상 관측데이터 조회
+   */
+  async getAgriculturalWeatherData(stationName?: string): Promise<AgriculturalWeatherData | null> {
+    const config = DATA_SOURCE_CONFIG;
+
+    if (config.weatherAPI.enabled) {
+      try {
+        const data = await kmaApiClient.getAgriculturalWeatherData(stationName);
+        if (data) {
+          if (config.debug) {
+            console.log('✅ 농업기상 데이터 로딩 완료:', data.station);
+          }
+          return data;
+        }
+      } catch (error) {
+        console.error('❌ 농업기상 데이터 조회 실패:', error);
+      }
+    }
+
+    // 폴백: 기본값 반환
+    return {
+      station: stationName || '기본 관측소',
+      observationDate: new Date().toISOString(),
+      temperature: 22,
+      humidity: 65,
+      windDirection: 180,
+      windSpeed: 2.5,
+      rainfall: 0,
+      sunshine: 8.5,
+      solarRadiation: 15.2,
+      soilTemperature: 18,
+      soilMoisture: 35
+    };
+  }
+
+  /**
+   * 모크 기상 데이터 로더
+   */
+  private async getMockWeatherData(): Promise<WeatherData> {
+    try {
+      // Vercel 환경에서는 import 방식 사용
+      const weatherData = await import('../data/weather.json');
+      return weatherData.default as WeatherData;
+    } catch (error) {
+      console.error('모크 기상데이터 로딩 실패:', error);
+      // 폴백으로 하드코딩된 데이터 제공
+      return {
+        current: {
+          temperature: 22,
+          humidity: 65,
+          rainfall: 0,
+          windSpeed: 2.5,
+          condition: '맑음',
+          lastUpdated: new Date().toISOString()
+        },
+        forecast: Array.from({ length: 7 }, (_, i) => ({
+          date: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          tempMin: 15 + Math.random() * 5,
+          tempMax: 25 + Math.random() * 5,
+          rainfall: Math.random() > 0.7 ? Math.random() * 10 : 0,
+          condition: ['맑음', '구름많음', '흐림'][Math.floor(Math.random() * 3)],
+          risk: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)] as 'low' | 'medium' | 'high'
+        })),
+        alerts: []
+      };
+    }
+  }
+
+  /**
+   * 병해충 정보 조회 - 작물별
+   */
+  async getPestInfo(cropName: string): Promise<RDAPestInfo[]> {
+    const config = DATA_SOURCE_CONFIG;
+    
+    if (config.debug) {
+      console.log('🐛 병해충 정보 조회:', cropName);
+    }
+
+    // 1차 시도: 농촌진흥청 API 사용
+    if (config.dataPortalAPI.enabled) {
+      try {
+        const pestData = await rdaApiClient.getPestInfoByCrop(cropName);
+        if (pestData.length > 0) {
+          if (config.debug) {
+            console.log(`✅ 농촌진흥청 API에서 ${pestData.length}개 병해충 정보 로딩 완료`);
+          }
+          return pestData;
+        }
+      } catch (error) {
+        console.error('❌ 농촌진흥청 병해충 API 조회 실패:', error);
+      }
+    }
+
+    // 2차 시도: 모크 데이터 사용
+    if (config.debug) {
+      console.log('📦 병해충 모크데이터 사용');
+    }
+    
+    return this.getMockPestData(cropName);
+  }
+
+  /**
+   * 토양 정보 조회 - 지역별
+   */
+  async getSoilInfo(region: string): Promise<SoilInfo | null> {
+    const config = DATA_SOURCE_CONFIG;
+    
+    if (config.debug) {
+      console.log('🌱 토양 정보 조회:', region);
+    }
+
+    // 1차 시도: 농촌진흥청 API 사용
+    if (config.dataPortalAPI.enabled) {
+      try {
+        const soilData = await rdaApiClient.getSoilInfo(region);
+        if (soilData) {
+          if (config.debug) {
+            console.log('✅ 농촌진흥청 API에서 토양 정보 로딩 완료');
+          }
+          return soilData;
+        }
+      } catch (error) {
+        console.error('❌ 농촌진흥청 토양 API 조회 실패:', error);
+      }
+    }
+
+    // 2차 시도: 모크 데이터 사용
+    if (config.debug) {
+      console.log('📦 토양 모크데이터 사용');
+    }
+    
+    return this.getMockSoilData(region);
+  }
+
+  /**
+   * 모크 병해충 데이터 생성
+   */
+  private getMockPestData(cropName: string): RDAPestInfo[] {
+    const commonPests = [
+      {
+        cropName: cropName,
+        pestName: '진딧물',
+        pestType: '해충',
+        symptoms: '잎이 오그라들고 황변됨',
+        preventionMethod: '친환경 방제제 살포, 천적 곤충 활용',
+        occurrenceTime: '4-6월, 9-10월',
+        riskLevel: 'medium' as const,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        cropName: cropName,
+        pestName: '잿빛곰팡이병',
+        pestType: '병',
+        symptoms: '잎과 과실에 회색 곰팡이 발생',
+        preventionMethod: '통풍 개선, 습도 조절, 살균제 처리',
+        occurrenceTime: '연중 (특히 습한 시기)',
+        riskLevel: 'high' as const,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        cropName: cropName,
+        pestName: '총채벌레',
+        pestType: '해충',
+        symptoms: '잎에 흰색 반점, 성장 저해',
+        preventionMethod: '�끈끈이 트랩 설치, 생물학적 방제',
+        occurrenceTime: '5-9월',
+        riskLevel: 'low' as const,
+        lastUpdated: new Date().toISOString()
+      }
+    ];
+
+    return commonPests;
+  }
+
+  /**
+   * 모크 토양 데이터 생성
+   */
+  private getMockSoilData(region: string): SoilInfo {
+    return {
+      region: region,
+      soilType: '양토',
+      phLevel: 6.2 + Math.random() * 0.6, // 6.2-6.8
+      organicMatter: 2.8 + Math.random() * 0.4, // 2.8-3.2%
+      nitrogen: 140 + Math.random() * 20, // 130-160 mg/kg
+      phosphorus: 280 + Math.random() * 40, // 260-320 mg/kg
+      potassium: 480 + Math.random() * 40, // 460-520 mg/kg
+      calcium: 5200 + Math.random() * 600, // 4900-5800 mg/kg
+      magnesium: 180 + Math.random() * 40, // 160-220 mg/kg
+      soilMoisture: 28 + Math.random() * 8, // 24-36%
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  /**
+   * API 연결 상태 확인
+   */
+  async checkAPIConnection(): Promise<{ farmMap: boolean; weather: boolean; dataPortal: boolean }> {
+    const results = {
+      farmMap: false,
+      weather: false,
+      dataPortal: false
+    };
+
+    // FarmMap API 연결 테스트
+    if (DATA_SOURCE_CONFIG.farmMapAPI.enabled) {
+      try {
+        results.farmMap = await farmMapApiClient.testConnection();
+      } catch (error) {
+        console.error('❌ FarmMap API 연결 테스트 실패:', error);
+      }
+    }
+
+    // 기상청 API 연결 테스트
+    if (DATA_SOURCE_CONFIG.weatherAPI.enabled) {
+      try {
+        results.weather = await kmaApiClient.testConnection();
+      } catch (error) {
+        console.error('❌ 기상청 API 연결 테스트 실패:', error);
+      }
+    }
+
+    // 농촌진흥청 API 연결 테스트
+    if (DATA_SOURCE_CONFIG.dataPortalAPI.enabled) {
+      try {
+        results.dataPortal = await rdaApiClient.testConnection();
+      } catch (error) {
+        console.error('❌ 농촌진흥청 API 연결 테스트 실패:', error);
+      }
+    }
+
+    return results;
   }
 }
 

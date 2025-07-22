@@ -1,0 +1,24 @@
+
+사용 도메인 https://data-mafra-go-kr.vercel.app/
+
+#기상청api허브 https://apihub.kma.go.kr : 
+Lw8JpvInQjSPCabyJ7I0qA
+
+#팜맵 ( https://agis.epis.or.kr ) 
+API KEY	: 0eVL9ZCI4mwTeCbhdCwN
+
+#한국농수산식품유통공사 https://www.kamis.or.kr/
+customer/mypage/my_openapi/my_openapi.do
+
+
+
+
+#공공데이터포털(https://www.data.go.kr/) api key
+
+## url에서 사용이 가능토록 인코딩된 인증키: 
+S1kBo55wOyrX9FdzDMbXL4blXSOj%2BmYuvk2s%2B%2Bw5iTb%2Ba7Uu3NWwqPjz6wv7H0JVRaHn4zM3AAJIHy8rTAiHLw%3D%3D
+
+## 인코딩되지 않은 원본 인증키: 
+S1kBo55wOyrX9FdzDMbXL4blXSOj+mYuvk2s++w5iTb+a7Uu3NWwqPjz6wv7H0JVRaHn4zM3AAJIHy8rTAiHLw==
+
+ 

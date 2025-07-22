@@ -15,6 +15,31 @@ export interface DataSourceConfig {
     domain: string;
     timeout: number;
   };
+
+  // 기상청 API 설정
+  weatherAPI: {
+    enabled: boolean;
+    baseUrl: string;
+    apiKey: string;
+    timeout: number;
+  };
+
+  // KAMIS 농산물 가격 API 설정
+  priceAPI: {
+    enabled: boolean;
+    baseUrl: string;
+    apiKey: string;
+    timeout: number;
+  };
+
+  // 공공데이터포털 API 설정 (농촌진흥청 등)
+  dataPortalAPI: {
+    enabled: boolean;
+    baseUrl: string;
+    apiKey: string;
+    apiKeyEncoded: string;
+    timeout: number;
+  };
   
   // 모크데이터 설정
   mockData: {
@@ -27,17 +52,39 @@ export interface DataSourceConfig {
   logApiCalls: boolean;
 }
 
-// 환경별 설정
+// 환경별 설정 - 환경변수에서 API 키 로드
 export const DATA_SOURCE_CONFIG: DataSourceConfig = {
   // 안전을 위해 기본값은 모크데이터 사용
   primarySource: 'mock',
   fallbackEnabled: true,
   
   farmMapAPI: {
-    enabled: false, // 개발 완료 후 true로 변경
-    baseUrl: 'https://agis.epis.or.kr/ASD/farmmapApi/',
-    apiKey: '0eVL9ZCI4mwTeCbhdCwN',
+    enabled: !!process.env.REACT_APP_FARMMAP_API_KEY, // API 키가 있으면 자동 활성화
+    baseUrl: process.env.REACT_APP_FARMMAP_API_BASE_URL || 'https://agis.epis.or.kr/ASD/farmmapApi/',
+    apiKey: process.env.REACT_APP_FARMMAP_API_KEY || '',
     domain: 'https://data-mafra-go-kr.vercel.app/',
+    timeout: 10000
+  },
+
+  weatherAPI: {
+    enabled: !!process.env.REACT_APP_KMA_API_KEY, // API 키가 있으면 자동 활성화
+    baseUrl: process.env.REACT_APP_KMA_API_BASE_URL || 'https://apihub.kma.go.kr',
+    apiKey: process.env.REACT_APP_KMA_API_KEY || '',
+    timeout: 10000
+  },
+
+  priceAPI: {
+    enabled: !!process.env.REACT_APP_KAMIS_API_KEY, // 향후 API 키 발급시 자동 활성화
+    baseUrl: process.env.REACT_APP_KAMIS_API_BASE_URL || 'https://www.kamis.or.kr',
+    apiKey: process.env.REACT_APP_KAMIS_API_KEY || '',
+    timeout: 10000
+  },
+
+  dataPortalAPI: {
+    enabled: !!process.env.REACT_APP_DATA_PORTAL_API_KEY, // 공공데이터포털 API 키가 있으면 자동 활성화
+    baseUrl: process.env.REACT_APP_DATA_PORTAL_BASE_URL || 'http://apis.data.go.kr',
+    apiKey: process.env.REACT_APP_DATA_PORTAL_API_KEY || '',
+    apiKeyEncoded: process.env.REACT_APP_DATA_PORTAL_API_KEY_ENCODED || '',
     timeout: 10000
   },
   
@@ -46,8 +93,8 @@ export const DATA_SOURCE_CONFIG: DataSourceConfig = {
     fallbackDelay: 1000
   },
   
-  debug: true, // 개발 중이므로 디버그 활성화
-  logApiCalls: true
+  debug: process.env.REACT_APP_DEBUG_MODE === 'true',
+  logApiCalls: process.env.REACT_APP_LOG_API_CALLS === 'true'
 };
 
 // 런타임에 설정 변경 가능한 함수들
@@ -68,12 +115,36 @@ export const disableFarmMapAPI = () => {
   console.log('⚠️ FarmMap API 비활성화 - 모크데이터 사용');
 };
 
+export const enableWeatherAPI = () => {
+  DATA_SOURCE_CONFIG.weatherAPI.enabled = true;
+  console.log('✅ 기상청 API 활성화');
+};
+
+export const disableWeatherAPI = () => {
+  DATA_SOURCE_CONFIG.weatherAPI.enabled = false;
+  console.log('⚠️ 기상청 API 비활성화');
+};
+
+export const enablePriceAPI = () => {
+  DATA_SOURCE_CONFIG.priceAPI.enabled = true;
+  console.log('✅ KAMIS 가격 API 활성화');
+};
+
+export const disablePriceAPI = () => {
+  DATA_SOURCE_CONFIG.priceAPI.enabled = false;
+  console.log('⚠️ KAMIS 가격 API 비활성화');
+};
+
 // 개발용 디버그 함수
 export const getDataSourceStatus = () => {
   return {
     primary: DATA_SOURCE_CONFIG.primarySource,
-    apiEnabled: DATA_SOURCE_CONFIG.farmMapAPI.enabled,
+    farmMapAPI: DATA_SOURCE_CONFIG.farmMapAPI.enabled,
+    weatherAPI: DATA_SOURCE_CONFIG.weatherAPI.enabled,
+    priceAPI: DATA_SOURCE_CONFIG.priceAPI.enabled,
+    dataPortalAPI: DATA_SOURCE_CONFIG.dataPortalAPI.enabled,
     mockEnabled: DATA_SOURCE_CONFIG.mockData.enabled,
-    fallback: DATA_SOURCE_CONFIG.fallbackEnabled
+    fallback: DATA_SOURCE_CONFIG.fallbackEnabled,
+    debug: DATA_SOURCE_CONFIG.debug
   };
 };
