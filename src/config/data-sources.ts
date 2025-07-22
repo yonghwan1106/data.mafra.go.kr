@@ -59,32 +59,32 @@ export const DATA_SOURCE_CONFIG: DataSourceConfig = {
   fallbackEnabled: true,
   
   farmMapAPI: {
-    enabled: !!process.env.REACT_APP_FARMMAP_API_KEY, // API 키가 있으면 자동 활성화
-    baseUrl: process.env.REACT_APP_FARMMAP_API_BASE_URL || 'https://agis.epis.or.kr/ASD/farmmapApi/',
-    apiKey: process.env.REACT_APP_FARMMAP_API_KEY || '',
+    enabled: !!import.meta.env.VITE_FARMMAP_API_KEY, // API 키가 있으면 자동 활성화
+    baseUrl: import.meta.env.VITE_FARMMAP_API_BASE_URL || 'https://agis.epis.or.kr/ASD/farmmapApi/',
+    apiKey: import.meta.env.VITE_FARMMAP_API_KEY || '',
     domain: 'https://data-mafra-go-kr.vercel.app/',
     timeout: 10000
   },
 
   weatherAPI: {
-    enabled: !!process.env.REACT_APP_KMA_API_KEY, // API 키가 있으면 자동 활성화
-    baseUrl: process.env.REACT_APP_KMA_API_BASE_URL || 'https://apihub.kma.go.kr',
-    apiKey: process.env.REACT_APP_KMA_API_KEY || '',
+    enabled: !!import.meta.env.VITE_KMA_API_KEY, // API 키가 있으면 자동 활성화
+    baseUrl: import.meta.env.VITE_KMA_API_BASE_URL || 'https://apihub.kma.go.kr',
+    apiKey: import.meta.env.VITE_KMA_API_KEY || '',
     timeout: 10000
   },
 
   priceAPI: {
-    enabled: !!process.env.REACT_APP_KAMIS_API_KEY, // 향후 API 키 발급시 자동 활성화
-    baseUrl: process.env.REACT_APP_KAMIS_API_BASE_URL || 'https://www.kamis.or.kr',
-    apiKey: process.env.REACT_APP_KAMIS_API_KEY || '',
+    enabled: !!import.meta.env.VITE_KAMIS_API_KEY, // 향후 API 키 발급시 자동 활성화
+    baseUrl: import.meta.env.VITE_KAMIS_API_BASE_URL || 'https://www.kamis.or.kr',
+    apiKey: import.meta.env.VITE_KAMIS_API_KEY || '',
     timeout: 10000
   },
 
   dataPortalAPI: {
-    enabled: !!process.env.REACT_APP_DATA_PORTAL_API_KEY, // 공공데이터포털 API 키가 있으면 자동 활성화
-    baseUrl: process.env.REACT_APP_DATA_PORTAL_BASE_URL || 'http://apis.data.go.kr',
-    apiKey: process.env.REACT_APP_DATA_PORTAL_API_KEY || '',
-    apiKeyEncoded: process.env.REACT_APP_DATA_PORTAL_API_KEY_ENCODED || '',
+    enabled: !!import.meta.env.VITE_DATA_PORTAL_API_KEY, // 공공데이터포털 API 키가 있으면 자동 활성화
+    baseUrl: import.meta.env.VITE_DATA_PORTAL_BASE_URL || 'http://apis.data.go.kr',
+    apiKey: import.meta.env.VITE_DATA_PORTAL_API_KEY || '',
+    apiKeyEncoded: import.meta.env.VITE_DATA_PORTAL_API_KEY_ENCODED || '',
     timeout: 10000
   },
   
@@ -93,8 +93,8 @@ export const DATA_SOURCE_CONFIG: DataSourceConfig = {
     fallbackDelay: 1000
   },
   
-  debug: process.env.REACT_APP_DEBUG_MODE === 'true',
-  logApiCalls: process.env.REACT_APP_LOG_API_CALLS === 'true'
+  debug: import.meta.env.VITE_DEBUG_MODE === 'true',
+  logApiCalls: import.meta.env.VITE_LOG_API_CALLS === 'true'
 };
 
 // 런타임에 설정 변경 가능한 함수들
