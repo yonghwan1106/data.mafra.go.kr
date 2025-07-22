@@ -82,7 +82,7 @@ export const DATA_SOURCE_CONFIG: DataSourceConfig = {
 
   dataPortalAPI: {
     enabled: !!import.meta.env.VITE_DATA_PORTAL_API_KEY, // 공공데이터포털 API 키가 있으면 자동 활성화
-    baseUrl: import.meta.env.VITE_DATA_PORTAL_BASE_URL || 'http://apis.data.go.kr',
+    baseUrl: import.meta.env.VITE_DATA_PORTAL_BASE_URL || 'https://apis.data.go.kr',
     apiKey: import.meta.env.VITE_DATA_PORTAL_API_KEY || '',
     apiKeyEncoded: import.meta.env.VITE_DATA_PORTAL_API_KEY_ENCODED || '',
     timeout: 10000
