@@ -32,7 +32,7 @@ const loadMockFarms = async (): Promise<Farm[]> => {
         farmSize: 2000,
         aciScore: 78,
         aciGrade: "B" as const,
-        lastUpdated: "2024-07-21"
+        lastUpdated: "2025-08-04"
       },
       {
         id: "farm-002", 
@@ -48,7 +48,7 @@ const loadMockFarms = async (): Promise<Farm[]> => {
         farmSize: 1500,
         aciScore: 85,
         aciGrade: "A" as const,
-        lastUpdated: "2024-07-21"
+        lastUpdated: "2025-08-04"
       }
     ];
   }
