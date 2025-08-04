@@ -13,7 +13,7 @@
     "farmSize": 2.5,
     "aciScore": 85,
     "aciGrade": "A",
-    "lastUpdated": "2025-06-24T09:00:00Z"
+    "lastUpdated": "2025-08-04T09:00:00Z"
   },
   {
     "id": "farm-002", 
@@ -29,7 +29,7 @@
     "farmSize": 1.8,
     "aciScore": 72,
     "aciGrade": "B",
-    "lastUpdated": "2025-06-24T09:00:00Z"
+    "lastUpdated": "2025-08-04T09:00:00Z"
   },
   {
     "id": "farm-003",
@@ -45,7 +45,7 @@
     "farmSize": 3.2,
     "aciScore": 68,
     "aciGrade": "B",
-    "lastUpdated": "2025-06-24T09:00:00Z"
+    "lastUpdated": "2025-08-04T09:00:00Z"
   },
   {
     "id": "farm-004",
@@ -61,7 +61,7 @@
     "farmSize": 2.1,
     "aciScore": 58,
     "aciGrade": "C", 
-    "lastUpdated": "2025-06-24T09:00:00Z"
+    "lastUpdated": "2025-08-04T09:00:00Z"
   },
   {
     "id": "farm-005",
@@ -77,6 +77,6 @@
     "farmSize": 4.5,
     "aciScore": 76,
     "aciGrade": "B",
-    "lastUpdated": "2025-06-24T09:00:00Z"
+    "lastUpdated": "2025-08-04T09:00:00Z"
   }
 ]
